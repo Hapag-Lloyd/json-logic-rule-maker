@@ -1,6 +1,5 @@
-package rulewright;
+package com.hlag.rulemaker;
 
-import com.hlag.rulemaker.WrappedRuleMaker;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 

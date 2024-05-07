@@ -2,52 +2,80 @@ package com.hlag.rulemaker;
 
 import io.github.jamsesso.jsonlogic.evaluator.JsonLogicEvaluationException;
 import io.github.jamsesso.jsonlogic.evaluator.expressions.PreEvaluatedArgumentsExpression;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Clamp expression that represents differential between two dates in Days.
+ */
 @Slf4j
+@NoArgsConstructor
 public class DateDiffExpression implements PreEvaluatedArgumentsExpression {
 
+  /**
+   * Singleton instance of the expression
+   */
   public static final DateDiffExpression INSTANCE = new DateDiffExpression();
 
-  private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-  private DateDiffExpression() {
-  }
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+  private static final int DATE_NOW_INDEX = 1;
+  private static final int MEASURING_RULE_INDEX = 2;
+  private static final int MEASURING_POINT_DATE_INDEX = 0;
 
   @Override
   public String key() {
     return "dateDiff";
   }
 
-  @SuppressWarnings({ "rawtypes", "squid:S1166", "squid:S818" })
   @Override
   public Object evaluate(List arguments, Object data) throws JsonLogicEvaluationException {
 
-    if (arguments.size() != 2) {
+    if (arguments.size() != 3) {
       throw new JsonLogicEvaluationException(
-          "dateDiff expects exactly 2 arguments: date1(YYYY-MM-DD), date2(YYYY-MM-DD)");
+          "dateDiffExpression expects exactly 3 arguments: dateTo(YYYY-MM-DD), dateNow(YYYY-MM-DD), measuringPoint"
+      );
     }
-    try {
-      
-      String date1 = StringUtils.left(Objects.toString(arguments.get(0)), 10);
-      String date2 = StringUtils.left(Objects.toString(arguments.get(1)), 10);
+    LocalDate dateNow = extractDate(arguments.get(DATE_NOW_INDEX).toString());
+    LocalDate measuringPointDate = extractDate(arguments.get(MEASURING_POINT_DATE_INDEX).toString());
 
-      LocalDate d1 = LocalDate.parse(date1, formatter);
-      LocalDate d2 = LocalDate.parse(date2, formatter);
-      long days = ChronoUnit.DAYS.between(d1, d2);
-      log.info("Date1: {}, Date2: {}, Days: {}", date1, date2, days);
-      return days;
-    } catch (Exception e) {
-      log.error(e.getMessage());
+    DayType measuringRule = DayType.fromValue(arguments.get(MEASURING_RULE_INDEX).toString());
+
+    long dateDiff = 0L;
+    if (measuringRule.equals(DayType.CALENDAR_DAYS)) {
+      dateDiff = ChronoUnit.DAYS.between(dateNow, measuringPointDate);
+    } else if (measuringRule.equals(DayType.BUSINESS_DAYS)) {
+      dateDiff = daysWithoutWeekend(dateNow, measuringPointDate);
     }
-
-    return 0l;
+    return dateDiff;
   }
 
+  private static LocalDate extractDate(String dateAsString) {
+    try {
+      return LocalDate.parse(dateAsString, formatter);
+    } catch (DateTimeParseException exception) {
+      throw new IllegalArgumentException("Wrong date as argument: " + dateAsString);
+    }
+  }
+
+  private long daysWithoutWeekend(LocalDate start, LocalDate end) {
+    long daysWithoutWeekends = 0;
+
+    for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)) {
+      if (isDayOfWeek(date.getDayOfWeek())) {
+        daysWithoutWeekends++;
+      }
+    }
+    return daysWithoutWeekends;
+  }
+
+  private boolean isDayOfWeek(DayOfWeek dayOfWeek) {
+    return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
+  }
 }
