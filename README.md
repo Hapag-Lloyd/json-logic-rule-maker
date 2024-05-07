@@ -4,6 +4,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hlag/json-logic-rule-maker/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hlag.logging/log4j2-stacktrace-filter-plugin)
 <!-- markdownlint-enable first-line-h1 -->
 
-
 # json-logic-rule-maker
+
 JsonLogic wrapper for Rules creation using fluent APIs.
