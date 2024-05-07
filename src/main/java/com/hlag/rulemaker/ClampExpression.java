@@ -4,7 +4,14 @@ import io.github.jamsesso.jsonlogic.evaluator.JsonLogicEvaluationException;
 import io.github.jamsesso.jsonlogic.evaluator.expressions.PreEvaluatedArgumentsExpression;
 import java.util.List;
 
+/**
+ * Clamp expression that represents value with additional minimum and maximum
+ */
 public class ClampExpression implements PreEvaluatedArgumentsExpression {
+
+  /**
+   * Singleton instance of the expression
+   */
   public static final ClampExpression INSTANCE = new ClampExpression();
 
   private ClampExpression() {

@@ -1,7 +1,6 @@
 package com.hlag.rulemaker;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.jamsesso.jsonlogic.JsonLogic;
@@ -55,7 +54,7 @@ public class RuleMaker {
     @SuppressWarnings("squid:S6213")
     public static RuleMaker var(String name) {
         Preconditions.checkNotNull(name, "Variable name cannot be null.");
-        return new RuleMaker(ImmutableMap.of("var", name));
+        return new RuleMaker(Map.of("var", name));
     }
 
     /**
@@ -72,7 +71,7 @@ public class RuleMaker {
         if (isAllowedLiteralType(value)) {
             return new RuleMaker(value);
         }
-        return new RuleMaker(ImmutableMap.of("literal", value));
+        return new RuleMaker(Map.of("literal", value));
     }
 
     private static boolean isAllowedLiteralType(Object value) {
@@ -103,7 +102,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker missingSome(Integer count, RuleMaker... values) {
-        return new RuleMaker(ImmutableMap.of("missing_some",
+        return new RuleMaker(Map.of("missing_some",
                 Arrays.asList(count, Arrays.stream(values)
                         .map(ruleWright -> ruleWright.expression)
                         .collect(Collectors.toList()))));
@@ -119,7 +118,7 @@ public class RuleMaker {
      */
     @SuppressWarnings({"null", "squid:S117"})
     public static RuleMaker ifThenElse(RuleMaker condition, RuleMaker then, RuleMaker _else) {
-        return new RuleMaker(ImmutableMap.of("if",
+        return new RuleMaker(Map.of("if",
                 Arrays.asList(condition.expression, then.expression, _else.expression)));
     }
 
@@ -132,7 +131,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker eq(RuleMaker left, RuleMaker right) {
-        return new RuleMaker(ImmutableMap.of("==", Arrays.asList(left.expression, right.expression)));
+        return new RuleMaker(Map.of("==", Arrays.asList(left.expression, right.expression)));
     }
 
     /**
@@ -144,7 +143,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker notEq(RuleMaker left, RuleMaker right) {
-        return new RuleMaker(ImmutableMap.of("!=", Arrays.asList(left.expression, right.expression)));
+        return new RuleMaker(Map.of("!=", Arrays.asList(left.expression, right.expression)));
     }
 
     /**
@@ -155,7 +154,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker negate(RuleMaker value) {
-        return new RuleMaker(ImmutableMap.of("!", value.expression));
+        return new RuleMaker(Map.of("!", value.expression));
     }
 
     /**
@@ -228,7 +227,7 @@ public class RuleMaker {
      * @param left   The left side of the comparison.
      * @param middle The middle of the comparison.
      * @param right  The right side of the comparison.
-     * @return A new RuleMaker representing the between x <= z <= y comparison
+     * @return A new RuleMaker representing the between x &lt;= z &lt;= y comparison
      */
     public static RuleMaker lte(RuleMaker left, RuleMaker middle, RuleMaker right) {
         return template("<=", left, middle, right);
@@ -240,7 +239,7 @@ public class RuleMaker {
      * @param left   The left side of the comparison.
      * @param middle The middle of the comparison.
      * @param right  The right side of the comparison.
-     * @return A new RuleMaker representing the between x < z < y comparison
+     * @return A new RuleMaker representing the between x &lt; z &lt; y comparison
      */
     public static RuleMaker lt(RuleMaker left, RuleMaker middle, RuleMaker right) {
         return template("<", left, middle, right);
@@ -252,7 +251,7 @@ public class RuleMaker {
      * @param left   The left side of the comparison.
      * @param middle The middle of the comparison.
      * @param right  The right side of the comparison.
-     * @return A new RuleMaker representing the between x <= z < y comparison
+     * @return A new RuleMaker representing the between x &lt;= z &lt; y comparison
      */
     public static RuleMaker lteLt(RuleMaker left, RuleMaker middle, RuleMaker right) {
         return template("<= <", left, middle, right);
@@ -264,7 +263,7 @@ public class RuleMaker {
      * @param left   The left side of the comparison.
      * @param middle The middle of the comparison.
      * @param right  The right side of the comparison.
-     * @return A new RuleMaker representing the between x < z <= y comparison
+     * @return A new RuleMaker representing the between x &lt; z &lt;= y comparison
      */
     public static RuleMaker ltLte(RuleMaker left, RuleMaker middle, RuleMaker right) {
         return template("< <=", left, middle, right);
@@ -272,51 +271,51 @@ public class RuleMaker {
 
 
     /**
-     * Creates a RuleMaker representing a sum of the given ruleWrights.
+     * Creates a RuleMaker representing a sum of the given ruleMaker.
      *
-     * @param values The ruleWrights to sum.
-     * @return A new RuleMaker representing the sum of the given ruleWrights.
+     * @param values The ruleMaker to sum.
+     * @return A new RuleMaker representing the sum of the given ruleMaker.
      */
     public static RuleMaker max(RuleMaker... values) {
         return template("max", values);
     }
 
     /**
-     * Creates a RuleMaker representing a minimum of the given ruleWrights.
+     * Creates a RuleMaker representing a minimum of the given ruleMaker.
      *
-     * @param values The ruleWrights to find the minimum of.
-     * @return A new RuleMaker representing the minimum of the given ruleWrights.
+     * @param values The ruleMaker to find the minimum of.
+     * @return A new RuleMaker representing the minimum of the given ruleMaker.
      */
     public static RuleMaker min(RuleMaker... values) {
         return template("min", values);
     }
 
     /**
-     * Creates a RuleMaker representing a sum of the given ruleWrights.
+     * Creates a RuleMaker representing a sum of the given ruleMaker.
      *
-     * @param expressions The ruleWrights to sum.
-     * @return A new RuleMaker representing the sum of the given ruleWrights.
+     * @param expressions The ruleMaker to sum.
+     * @return A new RuleMaker representing the sum of the given ruleMaker.
      */
     public static RuleMaker add(RuleMaker... expressions) {
         return template("+", expressions);
     }
 
     /**
-     * Creates a RuleMaker representing a subtraction of the given ruleWrights.
+     * Creates a RuleMaker representing a subtraction of the given ruleMaker.
      *
      * @param left  The left ruleWright.
      * @param right The right ruleWright.
      * @return A new RuleMaker representing the subtraction of the given
-     * ruleWrights.
+     * ruleMaker.
      */
     public static RuleMaker sub(RuleMaker left, RuleMaker right) {
         return template("-", left, right);
     }
 
     /**
-     * Creates a RuleMaker representing a multiplication of the given ruleWrights.
+     * Creates a RuleMaker representing a multiplication of the given ruleMaker.
      *
-     * @param expressions The ruleWrights to multiply.
+     * @param expressions The ruleMaker to multiply.
      * @return A new RuleMaker representing the multiplication of the given
      */
     public static RuleMaker mul(RuleMaker... expressions) {
@@ -324,11 +323,11 @@ public class RuleMaker {
     }
 
     /**
-     * Creates a RuleMaker representing a division of the given ruleWrights.
+     * Creates a RuleMaker representing a division of the given ruleMaker.
      *
      * @param left  The left ruleWright.
      * @param right The right ruleWright.
-     * @return A new RuleMaker representing the division of the given ruleWrights.
+     * @return A new RuleMaker representing the division of the given ruleMaker.
      */
     public static RuleMaker div(RuleMaker left, RuleMaker right) {
         return template("/", left, right);
@@ -336,12 +335,12 @@ public class RuleMaker {
 
     /**
      * Creates a RuleMaker representing a modulo operation of the given
-     * ruleWrights.
+     * ruleMaker.
      *
      * @param left  The left ruleWright.
      * @param right The right ruleWright.
      * @return A new RuleMaker representing the modulo operation of the given
-     * ruleWrights.
+     * ruleMaker.
      */
     public static RuleMaker mod(RuleMaker left, RuleMaker right) {
         return template("%", left, right);
@@ -356,7 +355,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker map(RuleMaker variable, RuleMaker action) {
-        return new RuleMaker(ImmutableMap.of("map", Arrays.asList(variable.expression, action.expression)));
+        return new RuleMaker(Map.of("map", Arrays.asList(variable.expression, action.expression)));
     }
 
     /**
@@ -368,7 +367,7 @@ public class RuleMaker {
      */
     @SuppressWarnings("null")
     public static RuleMaker filter(RuleMaker variable, RuleMaker action) {
-        return new RuleMaker(ImmutableMap.of("filter", Arrays.asList(variable.expression, action.expression)));
+        return new RuleMaker(Map.of("filter", Arrays.asList(variable.expression, action.expression)));
     }
 
     /**
@@ -383,48 +382,43 @@ public class RuleMaker {
      *
      * @param variable The variable to reduce.
      * @param action   The action to perform on the variable.
+     * @param initialValue The initial value
      * @return A new RuleMaker representing the reduce operation.
      */
     @SuppressWarnings("null")
     public static RuleMaker reduce(RuleMaker variable, RuleMaker action, RuleMaker initialValue) {
         return new RuleMaker(
-                ImmutableMap.of("reduce", Arrays.asList(variable.expression, action.expression, initialValue.expression)));
+                Map.of("reduce", Arrays.asList(variable.expression, action.expression, initialValue.expression)));
     }
 
     /**
      * Creates a RuleMaker representing a some operation.
      *
-     * @param action
-     * @param variable
-     * @return A new RuleMaker representing the some operation.
+     * @return A new RuleMaker representing some operation.
      */
     @SuppressWarnings("null")
     public static RuleMaker all(RuleMaker action, RuleMaker variable) {
-        return new RuleMaker(ImmutableMap.of("all", Arrays.asList(variable.expression, action.expression)));
+        return new RuleMaker(Map.of("all", Arrays.asList(variable.expression, action.expression)));
     }
 
     /**
      * Creates a RuleMaker representing a none operation.
      *
-     * @param action
-     * @param variable
      * @return A new RuleMaker representing the none operation.
      */
     @SuppressWarnings("null")
     public static RuleMaker none(RuleMaker action, RuleMaker variable) {
-        return new RuleMaker(ImmutableMap.of("none", Arrays.asList(variable.expression, action.expression)));
+        return new RuleMaker(Map.of("none", Arrays.asList(variable.expression, action.expression)));
     }
 
     /**
      * Creates a RuleMaker representing a some operation.
      *
-     * @param action
-     * @param variable
      * @return A new RuleMaker representing the some operation.
      */
     @SuppressWarnings("null")
     public static RuleMaker some(RuleMaker action, RuleMaker variable) {
-        return new RuleMaker(ImmutableMap.of("some", Arrays.asList(variable.expression, action.expression)));
+        return new RuleMaker(Map.of("some", Arrays.asList(variable.expression, action.expression)));
     }
 
     /**
@@ -449,11 +443,11 @@ public class RuleMaker {
     }
 
     /**
-     * Concatenates the given ruleWrights.
+     * Concatenates the given ruleMaker.
      *
-     * @param ruleWrights The ruleWrights to concatenate.
+     * @param values The ruleMaker to concatenate.
      * @return A new RuleMaker representing the concatenation of the given
-     * ruleWrights.
+     * ruleMaker.
      */
     public static RuleMaker cat(RuleMaker... values) {
         return template("cat", values);
@@ -465,7 +459,6 @@ public class RuleMaker {
      * @param value  The value to substring.
      * @param start  The start index of the substring.
      * @param length The length of the substring.
-     * @return
      */
     public static RuleMaker substr(RuleMaker value, RuleMaker start, RuleMaker length) {
         return template("substr", value, start, length);
@@ -473,7 +466,7 @@ public class RuleMaker {
 
     @SuppressWarnings("null")
     public static RuleMaker log(String value) {
-        return new RuleMaker(ImmutableMap.of("log", literal(value).expression));
+        return new RuleMaker(Map.of("log", literal(value).expression));
     }
 
     /**
@@ -481,23 +474,22 @@ public class RuleMaker {
      *
      * @param dateVar1 The first date variable.
      * @param dateVar2 The second date variable.
-     * @return
      */
     @SuppressWarnings("null")
     public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2) {
         Preconditions.checkNotNull(dateVar1, "Date1 cannot be null.");
         Preconditions.checkNotNull(dateVar2, "Date2 cannot be null.");
-        return new RuleMaker(ImmutableMap.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression)));
+        return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression)));
     }
 
     @SuppressWarnings("null")
     public static RuleMaker clamp(RuleMaker value, RuleMaker min, RuleMaker max) {
-        return new RuleMaker(ImmutableMap.of("clamp", Arrays.asList(value.expression, min.expression, max.expression)));
+        return new RuleMaker(Map.of("clamp", Arrays.asList(value.expression, min.expression, max.expression)));
     }
 
     @SuppressWarnings("null")
     private static RuleMaker template(String op, RuleMaker... values) {
-        return new RuleMaker(ImmutableMap.of(op,
+        return new RuleMaker(Map.of(op,
                 Arrays.stream(values)
                         .map(ruleWright -> ruleWright.expression)
                         .collect(Collectors.toList())));

@@ -12,10 +12,16 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * Clamp expression that represents differential between two dates in Days.
+ */
 @Slf4j
 @NoArgsConstructor
 public class DateDiffExpression implements PreEvaluatedArgumentsExpression {
 
+  /**
+   * Singleton instance of the expression
+   */
   public static final DateDiffExpression INSTANCE = new DateDiffExpression();
 
   private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
