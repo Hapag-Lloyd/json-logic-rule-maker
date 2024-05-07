@@ -17,4 +17,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Maven Package
-        run: mvn -B package --file pom.xml
+        run: ./mvnw -B package --file pom.xml
