@@ -9,6 +9,7 @@
     <!-- do not change this version. Done by the pipeline before pushing the artifact to Maven Central -->
     <version>1.0.0-SNAPSHOT</version>
     <name>JsonLogic rule maker</name>
+    <description>Helper library that contains custom expressions and operators for JsonLogic</description>
     <url>https://github.com/Hapag-Lloyd/json-logic-rule-maker</url>
     <packaging>jar</packaging>
 
