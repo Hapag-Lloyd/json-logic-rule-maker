@@ -9,6 +9,8 @@ public class ExtendedNumericComparisonExpression implements PreEvaluatedArgument
 
   public static final ExtendedNumericComparisonExpression LTE_LT = new ExtendedNumericComparisonExpression("<= <");
   public static final ExtendedNumericComparisonExpression LT_LTE = new ExtendedNumericComparisonExpression("< <=");
+  public static final ExtendedNumericComparisonExpression LTE_LTE = new ExtendedNumericComparisonExpression("<= <=");
+  public static final ExtendedNumericComparisonExpression LT_LT = new ExtendedNumericComparisonExpression("< <");
 
   private final String key;
 
@@ -35,6 +37,12 @@ public class ExtendedNumericComparisonExpression implements PreEvaluatedArgument
 
       case "< <=":
         return values[0] < values[1] && values[1] <= values[2];
+
+      case "<= <=":
+        return values[0] <= values[1] && values[1] <= values[2];
+
+      case "< <":
+        return values[0] < values[1] && values[1] < values[2];
 
       default:
         throw new JsonLogicEvaluationException("'" + key + "' does not support between comparisons");

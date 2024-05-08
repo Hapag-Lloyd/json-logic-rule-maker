@@ -39,7 +39,7 @@ public class DateDiffExpression implements PreEvaluatedArgumentsExpression {
 
     if (arguments.size() != 3) {
       throw new JsonLogicEvaluationException(
-          "dateDiffExpression expects exactly 3 arguments: dateTo(YYYY-MM-DD), dateNow(YYYY-MM-DD), measuringPoint"
+          "dateDiffExpression expects exactly 3 arguments: dateTo(YYYY-MM-DD), dateNow(YYYY-MM-DD), measuringRule"
       );
     }
     LocalDate dateNow = extractDate(arguments.get(DATE_NOW_INDEX).toString());

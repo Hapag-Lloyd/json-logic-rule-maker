@@ -54,7 +54,7 @@ class DateDiffExpressionUnitTest {
     assertThatThrownBy(() -> dateDiffExpression.evaluate(arguments, null))
         .isInstanceOf(JsonLogicEvaluationException.class)
         .hasMessage(
-            "dateDiffExpression expects exactly 3 arguments: dateTo(YYYY-MM-DD), dateNow(YYYY-MM-DD), measuringPoint");
+            "dateDiffExpression expects exactly 3 arguments: dateTo(YYYY-MM-DD), dateNow(YYYY-MM-DD), measuringRule");
   }
 
   @Test
