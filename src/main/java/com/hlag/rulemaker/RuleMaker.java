@@ -107,7 +107,7 @@ public class RuleMaker {
     public static RuleMaker missingSome(Integer count, RuleMaker... values) {
         return new RuleMaker(Map.of("missing_some",
             Arrays.asList(count, Arrays.stream(values)
-                .map(ruleWright -> ruleWright.expression)
+                .map(ruleMaker -> ruleMaker.expression)
                 .collect(Collectors.toList()))));
     }
 
@@ -494,7 +494,7 @@ public class RuleMaker {
     private static RuleMaker template(String op, RuleMaker... values) {
         return new RuleMaker(Map.of(op,
             Arrays.stream(values)
-                .map(ruleWright -> ruleWright.expression)
+                .map(ruleMaker -> ruleMaker.expression)
                 .collect(Collectors.toList())));
     }
 

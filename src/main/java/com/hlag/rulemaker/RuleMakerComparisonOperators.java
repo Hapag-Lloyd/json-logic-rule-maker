@@ -15,7 +15,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RuleMakerComparisonOperatorMapper {
+public enum RuleMakerComparisonOperators {
 
   LOWER(LT.key()),
   LOWER_OR_EQUAL(LTE.key()),
@@ -26,11 +26,11 @@ public enum RuleMakerComparisonOperatorMapper {
   LOWER_OR_EQUAL_LOWER(LTE_LT.key()),
   LOWER_LOWER_OR_EQUAL(LT_LTE.key());
 
-  private final String ruleWrightOperator;
+  private final String ruleMakerOperator;
 
-  public static RuleMakerComparisonOperatorMapper fromRuleWrightOperator(String ruleWrightOperator) {
-    return Arrays.stream(RuleMakerComparisonOperatorMapper.values())
-        .filter(operatorMapper -> operatorMapper.getRuleWrightOperator().equals(ruleWrightOperator))
+  public static RuleMakerComparisonOperators fromRuleWrightOperator(String ruleWrightOperator) {
+    return Arrays.stream(RuleMakerComparisonOperators.values())
+        .filter(operatorMapper -> operatorMapper.getRuleMakerOperator().equals(ruleWrightOperator))
         .findFirst().orElseThrow();
   }
 }
