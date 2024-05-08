@@ -26,17 +26,20 @@ public class RuleMaker {
     }.getType();
 
     private static final JsonLogic jsonLogic = new JsonLogic()
-            .addOperation(ClampExpression.INSTANCE)
-            .addOperation(DateDiffExpression.INSTANCE)
-            .addOperation(ExtendedNumericComparisonExpression.LT_LTE)
-            .addOperation(ExtendedNumericComparisonExpression.LTE_LT);
+        .addOperation(ClampExpression.INSTANCE)
+        .addOperation(DateDiffExpression.INSTANCE)
+        .addOperation(ExtendedNumericComparisonExpression.LT_LTE)
+        .addOperation(ExtendedNumericComparisonExpression.LT_LT)
+        .addOperation(ExtendedNumericComparisonExpression.LTE_LTE)
+        .addOperation(ExtendedNumericComparisonExpression.LTE_LT);
 
     private static final Set<Class<?>> ALLOWED_LITERAL_TYPES = Set.of(
-            Number.class,
-            String.class,
-            Boolean.class,
-            Arrays.class,
-            List.class
+        Number.class,
+        String.class,
+        Boolean.class,
+        Arrays.class,
+        List.class,
+        Integer[].class
     );
 
     protected final Object expression;
@@ -76,8 +79,8 @@ public class RuleMaker {
 
     private static boolean isAllowedLiteralType(Object value) {
         return ALLOWED_LITERAL_TYPES
-                .stream()
-                .anyMatch(clazz -> clazz.isInstance(value));
+            .stream()
+            .anyMatch(clazz -> clazz.isInstance(value));
     }
 
     /**
@@ -103,9 +106,9 @@ public class RuleMaker {
     @SuppressWarnings("null")
     public static RuleMaker missingSome(Integer count, RuleMaker... values) {
         return new RuleMaker(Map.of("missing_some",
-                Arrays.asList(count, Arrays.stream(values)
-                        .map(ruleWright -> ruleWright.expression)
-                        .collect(Collectors.toList()))));
+            Arrays.asList(count, Arrays.stream(values)
+                .map(ruleWright -> ruleWright.expression)
+                .collect(Collectors.toList()))));
     }
 
     /**
@@ -119,7 +122,7 @@ public class RuleMaker {
     @SuppressWarnings({"null", "squid:S117"})
     public static RuleMaker ifThenElse(RuleMaker condition, RuleMaker then, RuleMaker _else) {
         return new RuleMaker(Map.of("if",
-                Arrays.asList(condition.expression, then.expression, _else.expression)));
+            Arrays.asList(condition.expression, then.expression, _else.expression)));
     }
 
     /**
@@ -230,7 +233,7 @@ public class RuleMaker {
      * @return A new RuleMaker representing the between x &lt;= z &lt;= y comparison
      */
     public static RuleMaker lte(RuleMaker left, RuleMaker middle, RuleMaker right) {
-        return template("<=", left, middle, right);
+        return template("<= <=", left, middle, right);
     }
 
     /**
@@ -242,7 +245,7 @@ public class RuleMaker {
      * @return A new RuleMaker representing the between x &lt; z &lt; y comparison
      */
     public static RuleMaker lt(RuleMaker left, RuleMaker middle, RuleMaker right) {
-        return template("<", left, middle, right);
+        return template("< <", left, middle, right);
     }
 
     /**
@@ -388,7 +391,7 @@ public class RuleMaker {
     @SuppressWarnings("null")
     public static RuleMaker reduce(RuleMaker variable, RuleMaker action, RuleMaker initialValue) {
         return new RuleMaker(
-                Map.of("reduce", Arrays.asList(variable.expression, action.expression, initialValue.expression)));
+            Map.of("reduce", Arrays.asList(variable.expression, action.expression, initialValue.expression)));
     }
 
     /**
@@ -476,10 +479,10 @@ public class RuleMaker {
      * @param dateVar2 The second date variable.
      */
     @SuppressWarnings("null")
-    public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2) {
+    public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2, RuleMaker measuringPoint) {
         Preconditions.checkNotNull(dateVar1, "Date1 cannot be null.");
         Preconditions.checkNotNull(dateVar2, "Date2 cannot be null.");
-        return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression)));
+        return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression, measuringPoint.expression)));
     }
 
     @SuppressWarnings("null")
@@ -490,9 +493,9 @@ public class RuleMaker {
     @SuppressWarnings("null")
     private static RuleMaker template(String op, RuleMaker... values) {
         return new RuleMaker(Map.of(op,
-                Arrays.stream(values)
-                        .map(ruleWright -> ruleWright.expression)
-                        .collect(Collectors.toList())));
+            Arrays.stream(values)
+                .map(ruleWright -> ruleWright.expression)
+                .collect(Collectors.toList())));
     }
 
     public String toJson() {
@@ -579,8 +582,8 @@ public class RuleMaker {
      */
     private Set<String> findMissingVariables(Map<String, Object> data) {
         return findVariables(toJson()).stream()
-                .filter(variable -> !isVariablePresent(data, variable))
-                .collect(Collectors.toSet());
+            .filter(variable -> !isVariablePresent(data, variable))
+            .collect(Collectors.toSet());
     }
 
     /**
