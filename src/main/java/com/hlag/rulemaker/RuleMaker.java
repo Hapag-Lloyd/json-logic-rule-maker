@@ -36,7 +36,8 @@ public class RuleMaker {
             String.class,
             Boolean.class,
             Arrays.class,
-            List.class
+            List.class,
+            Integer[].class
     );
 
     protected final Object expression;
@@ -230,7 +231,7 @@ public class RuleMaker {
      * @return A new RuleMaker representing the between x &lt;= z &lt;= y comparison
      */
     public static RuleMaker lte(RuleMaker left, RuleMaker middle, RuleMaker right) {
-        return template("<=", left, middle, right);
+        return template("<= <=", left, middle, right);
     }
 
     /**
@@ -242,7 +243,7 @@ public class RuleMaker {
      * @return A new RuleMaker representing the between x &lt; z &lt; y comparison
      */
     public static RuleMaker lt(RuleMaker left, RuleMaker middle, RuleMaker right) {
-        return template("<", left, middle, right);
+        return template("< <", left, middle, right);
     }
 
     /**
@@ -476,10 +477,10 @@ public class RuleMaker {
      * @param dateVar2 The second date variable.
      */
     @SuppressWarnings("null")
-    public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2) {
+    public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2, RuleMaker measuringPoint) {
         Preconditions.checkNotNull(dateVar1, "Date1 cannot be null.");
         Preconditions.checkNotNull(dateVar2, "Date2 cannot be null.");
-        return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression)));
+        return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression, measuringPoint.expression)));
     }
 
     @SuppressWarnings("null")
