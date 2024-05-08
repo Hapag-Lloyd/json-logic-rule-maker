@@ -29,6 +29,8 @@ public class RuleMaker {
             .addOperation(ClampExpression.INSTANCE)
             .addOperation(DateDiffExpression.INSTANCE)
             .addOperation(ExtendedNumericComparisonExpression.LT_LTE)
+            .addOperation(ExtendedNumericComparisonExpression.LT_LT)
+            .addOperation(ExtendedNumericComparisonExpression.LTE_LTE)
             .addOperation(ExtendedNumericComparisonExpression.LTE_LT);
 
     private static final Set<Class<?>> ALLOWED_LITERAL_TYPES = Set.of(
