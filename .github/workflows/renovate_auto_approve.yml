@@ -6,13 +6,6 @@ on:
   pull_request_target
 
 jobs:
-  pr-auto-approve:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    if: github.actor == 'renovate[bot]'
-    steps:
-      - uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
-        with:
-          review-message: "Auto approve Renovate PR (organization rule)"
-          github-token: ${{ secrets.PAT_FOR_PR_AUTO_APPROVAL }}
+  default:
+    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/default_renovate_auto_approve_callable.yml@3f1ea88beec7aba96ff7b4f9d4c6edd67d8efff8
+    secrets: inherit

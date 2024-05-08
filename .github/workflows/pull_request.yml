@@ -12,43 +12,6 @@ on:
       - "release-please--branches--*"
 
 jobs:
-  title:
-    name: Validate PR title
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/create-github-app-token@7bfa3a4717ef143a604ee0a99d859b8886a96d00 # v1.9.3
-        id: app-token
-        with:
-          app-id: ${{ vars.GET_TOKEN_APP_ID }}
-          private-key: ${{ secrets.GET_TOKEN_APP_PRIVATE_KEY }}
-      - uses: amannn/action-semantic-pull-request@e9fabac35e210fea40ca5b14c0da95a099eff26f # v5.4.0
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        with:
-          types: |
-            build
-            chore
-            ci
-            docs
-            feat
-            fix
-            perf
-            refactor
-            revert
-            style
-            test
-          # Configure which scopes are allowed.
-          # deps - dependency updates
-          # main - for release-please (scope used for releases)
-          scopes: |
-            deps
-            main
-          requireScope: false
-          subjectPattern: ^(?![A-Z]).+$
-          subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}"
-            didn't match the configured pattern. Please ensure that the subject
-            doesn't start with an uppercase character.
-          wip: true
-          validateSingleCommit: false
-          validateSingleCommitMatchesPrTitle: false
+  default:
+    uses: Hapag-Lloyd/Workflow-Templates/.github/workflows/default_pull_request_callable.yml@3f1ea88beec7aba96ff7b4f9d4c6edd67d8efff8
+    secrets: inherit
