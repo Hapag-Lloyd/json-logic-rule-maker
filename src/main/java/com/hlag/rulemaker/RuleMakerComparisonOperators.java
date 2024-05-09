@@ -31,6 +31,6 @@ public enum RuleMakerComparisonOperators {
   public static RuleMakerComparisonOperators fromRuleWrightOperator(String ruleWrightOperator) {
     return Arrays.stream(RuleMakerComparisonOperators.values())
         .filter(operatorMapper -> operatorMapper.getRuleMakerOperator().equals(ruleWrightOperator))
-        .findFirst().orElseThrow();
+        .findFirst().orElseThrow(() -> new IllegalArgumentException("No such operator: " + "\"" + ruleWrightOperator + "\""));
   }
 }
