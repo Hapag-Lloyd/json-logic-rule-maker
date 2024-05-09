@@ -56,7 +56,7 @@ public class WrappedRuleMaker extends RuleMaker {
     boolean notMap = !(object instanceof Map);
     boolean notNestedMap = true;
 
-    if (object instanceof Collection) {
+    if(object instanceof Collection) {
       notNestedMap = ((Collection<?>) object).stream().noneMatch(Map.class::isInstance);
     }
 
@@ -64,7 +64,11 @@ public class WrappedRuleMaker extends RuleMaker {
   }
 
   public String getTopLevelOperator() {
-    Map<?, ?> expressionMap = (Map<?, ?>) expression;
-      return (String) expressionMap.keySet().stream().findFirst().orElseThrow();
+    if (isLiteral(expression)) {
+      throw new IllegalStateException("Expression is a literal");
     }
+
+    Map<?, ?> expressionMap = (Map<?, ?>) expression;
+    return (String) expressionMap.keySet().stream().findFirst().orElseThrow();
+  }
 }
