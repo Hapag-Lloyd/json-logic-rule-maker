@@ -64,7 +64,11 @@ public class WrappedRuleMaker extends RuleMaker {
   }
 
   public String getTopLevelOperator() {
-    Map<?, ?> expressionMap = (Map<?, ?>) expression;
-      return (String) expressionMap.keySet().stream().findFirst().orElseThrow();
+    if (isLiteral(expression)) {
+      throw new IllegalStateException("Expression is a literal");
     }
+
+    Map<?, ?> expressionMap = (Map<?, ?>) expression;
+    return (String) expressionMap.keySet().stream().findFirst().orElseThrow();
+  }
 }
