@@ -1,5 +1,6 @@
 package com.hlag.rulemaker;
 
+import java.util.Map;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +79,19 @@ class WrappedRuleMakerUnitTest {
         // Then
         assertThatThrownBy(givenWrappedRuleWright::unwrap).isInstanceOf(IllegalStateException.class)
                 .hasMessage("Expression is already a literal");
+    }
+
+    @Test
+    void shouldReturnTopLevelOperator_whenGetTopLevelOperator() {
+      //Given
+      Map<String, Object> source = Map.of("< <", List.of());
+      WrappedRuleMaker sut = new WrappedRuleMaker(source);
+
+      //When
+      String result = sut.getTopLevelOperator();
+
+      //Then
+      assertThat(result).isEqualTo("< <");
     }
 
     private Object getJsonLogicMap(String jsonLogic) {
