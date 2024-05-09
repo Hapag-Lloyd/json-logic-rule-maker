@@ -56,7 +56,7 @@ public class WrappedRuleMaker extends RuleMaker {
     boolean notMap = !(object instanceof Map);
     boolean notNestedMap = true;
 
-    if (object instanceof Collection) {
+    if(object instanceof Collection) {
       notNestedMap = ((Collection<?>) object).stream().noneMatch(Map.class::isInstance);
     }
 
