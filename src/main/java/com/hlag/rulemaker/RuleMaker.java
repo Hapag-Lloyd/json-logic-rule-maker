@@ -3,8 +3,14 @@ package com.hlag.rulemaker;
 import com.google.common.base.Preconditions;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.hlag.rulemaker.exception.RuleMakerEvaluationException;
+import com.hlag.rulemaker.exception.RuleMakerException;
+import com.hlag.rulemaker.exception.RuleMakerMissingVariablesException;
+import com.hlag.rulemaker.exception.RuleMakerParseExpressionException;
 import io.github.jamsesso.jsonlogic.JsonLogic;
 import io.github.jamsesso.jsonlogic.JsonLogicException;
+import io.github.jamsesso.jsonlogic.ast.JsonLogicParseException;
+import io.github.jamsesso.jsonlogic.evaluator.JsonLogicEvaluationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -502,6 +508,10 @@ public class RuleMaker {
         return gson.toJson(expression);
     }
 
+    public Object evaluate(Object data) {
+        return evaluate(toJson(), data);
+    }
+
     /**
      * Evaluates the JSON expression with the given data.
      *
@@ -509,30 +519,26 @@ public class RuleMaker {
      * @return The result of the evaluation.
      */
     @SuppressWarnings({"squid:S1166", "squid:S112"})
-    public Object evaluate(Object data) {
-        Object result = null;
+    public static Object evaluate(String expression, Object data) {
         try {
-            String json = toJson();
             // TODO a strange behavior, need to investigate it further
             if (data instanceof Map) {
                 Map<String, Object> normalizedMap = gson.fromJson(gson.toJson(data), type);
-                Set<String> missingVariables = findMissingVariables(normalizedMap);
+                Set<String> missingVariables = findMissingVariables(expression, normalizedMap);
                 if (!missingVariables.isEmpty()) {
-                    throw new IllegalArgumentException("Missing variables: " + missingVariables);
+                    throw new RuleMakerMissingVariablesException(missingVariables);
                 }
-                result = jsonLogic.apply(json, normalizedMap);
+                return jsonLogic.apply(expression, normalizedMap);
             } else {
-                result = jsonLogic.apply(json, data);
+                return jsonLogic.apply(expression, data);
             }
-        } catch (NullPointerException e) {
-            return null; // bad data
+        } catch (JsonLogicParseException e) {
+            throw new RuleMakerParseExpressionException(e.getMessage(), e);
+        } catch (JsonLogicEvaluationException e) {
+            throw new RuleMakerEvaluationException(e.getMessage(), e);
         } catch (JsonLogicException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuleMakerException(e.getMessage(), e);
         }
-        if (log.isDebugEnabled()) {
-            log.debug("RuleMaker: {} -> {}", toJson(), result);
-        }
-        return result;
     }
 
     /**
@@ -580,8 +586,8 @@ public class RuleMaker {
      * @param data The data map to check for variable presence.
      * @return A set of variables that are missing in the data map.
      */
-    private Set<String> findMissingVariables(Map<String, Object> data) {
-        return findVariables(toJson()).stream()
+    private static Set<String> findMissingVariables(String expression, Map<String, Object> data) {
+        return findVariables(expression).stream()
             .filter(variable -> !isVariablePresent(data, variable))
             .collect(Collectors.toSet());
     }
@@ -596,7 +602,7 @@ public class RuleMaker {
      * @return true if the variable is present in the data map; false otherwise.
      */
     @SuppressWarnings("unchecked")
-    private boolean isVariablePresent(Map<String, Object> data, String variable) {
+    private static boolean isVariablePresent(Map<String, Object> data, String variable) {
         if (variable == null || variable.isBlank()) {
             return true;
         }
