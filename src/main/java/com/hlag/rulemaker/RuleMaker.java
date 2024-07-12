@@ -1,6 +1,5 @@
 package com.hlag.rulemaker;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -55,8 +55,7 @@ public class RuleMaker {
    * @return A new RuleMaker representing the variable.
    */
   @SuppressWarnings("squid:S6213")
-  public static RuleMaker var(String name) {
-    Preconditions.checkNotNull(name, "Variable name cannot be null.");
+  public static RuleMaker var(@NonNull String name) {
     return new RuleMaker(Map.of("var", name));
   }
 
@@ -429,7 +428,7 @@ public class RuleMaker {
    * Creates a RuleMaker representing the in operation.
    *
    * @param value The value to check.
-   * @param set The array to check against or string to check for substring.
+   * @param set   The array to check against or string to check for substring.
    * @return A new RuleMaker representing the in operation.
    */
   public static RuleMaker in(RuleMaker value, RuleMaker set) {
@@ -461,6 +460,7 @@ public class RuleMaker {
   /**
    * Creates a RuleMaker representing a log operation.
    *
+   * @param value The string to log
    * @return A new RuleMaker representing the log operation.
    */
   public static RuleMaker log(String value) {
@@ -470,12 +470,12 @@ public class RuleMaker {
   /**
    * Creates a RuleMaker representing a date difference operation.
    *
-   * @param dateVar1 The first date variable.
-   * @param dateVar2 The second date variable.
+   * @param dateVar1       The first date variable.
+   * @param dateVar2       The second date variable.
+   * @param measuringPoint Variable defining how to calculate the difference (com.hlag.rulemaker.expression.DayType)
+   * @return A new RuleMaker representing the date difference operation.
    */
-  public static RuleMaker dateDiff(RuleMaker dateVar1, RuleMaker dateVar2, RuleMaker measuringPoint) {
-    Preconditions.checkNotNull(dateVar1, "Date1 cannot be null.");
-    Preconditions.checkNotNull(dateVar2, "Date2 cannot be null.");
+  public static RuleMaker dateDiff(@NonNull RuleMaker dateVar1, @NonNull RuleMaker dateVar2, RuleMaker measuringPoint) {
     return new RuleMaker(Map.of("dateDiff", Arrays.asList(dateVar1.expression, dateVar2.expression, measuringPoint.expression)));
   }
 
@@ -486,6 +486,7 @@ public class RuleMaker {
    * @param value The value.
    * @param min   The min variable.
    * @param max   The max variable.
+   * @return A new RuleMaker representing a clamp operation.
    */
   public static RuleMaker clamp(RuleMaker value, RuleMaker min, RuleMaker max) {
     return new RuleMaker(Map.of("clamp", Arrays.asList(value.expression, min.expression, max.expression)));
@@ -575,7 +576,7 @@ public class RuleMaker {
    */
   private static Set<String> findMissingVariables(String expression, Map<String, Object> data) {
     return findVariables(expression).stream()
-      .filter(variable -> !(variable.equals("accumulator") || variable.equals("current")) )
+      .filter(variable -> !(variable.equals("accumulator") || variable.equals("current")))
       .filter(variable -> !isVariablePresent(data, variable))
       .collect(Collectors.toSet());
   }

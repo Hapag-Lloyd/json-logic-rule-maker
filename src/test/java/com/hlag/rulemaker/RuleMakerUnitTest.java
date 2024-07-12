@@ -1,7 +1,11 @@
 package com.hlag.rulemaker;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.hlag.rulemaker.exception.RuleMakerEvaluationException;
+import com.hlag.rulemaker.exception.RuleMakerMissingVariablesException;
+import com.hlag.rulemaker.expression.DayType;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -464,6 +468,74 @@ class RuleMakerUnitTest {
     assertThat(value).isEqualTo(expected);
   }
 
+  @Test
+  void shouldEvaluateLog_whenEvaluate_givenLog() {
+    //Given
+    String stringValue = "banana";
+
+    RuleMaker ruleMaker = RuleMaker.log(stringValue);
+
+    //When
+    Object value = ruleMaker.evaluate(null);
+
+    //Then
+    assertThat(value).isEqualTo(stringValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource("dateDiffArguments")
+  void shouldEvaluateDateDiff_whenEvaluate_givenDateDiff(String firstDate, String secondDate, DayType measuringRule,
+    Long expected) {
+    //Given
+    RuleMaker ruleMaker = RuleMaker.dateDiff(RuleMaker.literal(secondDate), RuleMaker.literal(firstDate),
+      RuleMaker.literal(measuringRule.getValue()));
+
+    //When
+    Object value = ruleMaker.evaluate(null);
+
+    //Then
+    assertThat(value).isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @MethodSource("clampArguments")
+  void shouldEvaluateClamp_whenEvaluate_givenClamp(BigDecimal number, BigDecimal min, BigDecimal max, BigDecimal expected) {
+    //Given
+    RuleMaker ruleMaker = RuleMaker.clamp(RuleMaker.literal(number), RuleMaker.literal(min), RuleMaker.literal(max));
+
+    //When
+    Object value = ruleMaker.evaluate(null);
+
+    //Then
+    assertThat(value).isEqualTo(expected);
+  }
+
+  @Test
+  void shouldThrowException_whenEvaluate_givenMissingVariable() {
+    //Given
+    Map<String, Object> data = Map.of();
+    RuleMaker ruleMaker = RuleMaker.var("x");
+
+    //When
+    //Then
+    assertThatThrownBy(() -> ruleMaker.evaluate(data))
+      .isInstanceOf(RuleMakerMissingVariablesException.class)
+      .hasMessage("Missing variables: [x]");
+  }
+
+  @Test
+  void shouldThrowException_whenEvaluate_givenWrongDataFormat() {
+    //Given
+    Map<String, Object> data = Map.of("x", "wrong_format");
+    RuleMaker ruleMaker = RuleMaker.add(RuleMaker.literal(1), RuleMaker.var("x"));
+
+    //When
+    //Then
+    assertThatThrownBy(() -> ruleMaker.evaluate(data))
+      .isInstanceOf(RuleMakerEvaluationException.class)
+      .hasMessage("Non numeric argument: wrong_format");
+  }
+
   private static Stream<Arguments> missingArguments() {
     return Stream.of(
       Arguments.of(List.of("x", "y"), Map.of("x", 1, "z", 1), List.of("y")),
@@ -698,6 +770,29 @@ class RuleMakerUnitTest {
     return Stream.of(
       Arguments.of("banana", 3, 3, "ana"),
       Arguments.of("banana", 0, 6, "banana")
+    );
+  }
+
+  private static Stream<Arguments> dateDiffArguments() {
+    return Stream.of(
+      Arguments.of("2024-04-19", "2024-04-20", DayType.CALENDAR_DAYS, 1L),
+      Arguments.of("2024-04-19", "2024-04-20", DayType.BUSINESS_DAYS, 1L),
+      Arguments.of("2024-04-19", "2024-04-26", DayType.CALENDAR_DAYS, 7L),
+      Arguments.of("2024-04-19", "2024-04-26", DayType.BUSINESS_DAYS, 5L),
+      Arguments.of("2024-04-19", "2024-05-03", DayType.BUSINESS_DAYS, 10L),
+      Arguments.of("2024-04-19", "2024-05-03", DayType.CALENDAR_DAYS, 14L),
+      Arguments.of("2024-04-19", "2024-04-19", DayType.CALENDAR_DAYS, 0L),
+      Arguments.of("2024-04-19", "2024-04-19", DayType.CALENDAR_DAYS, 0L),
+      Arguments.of("2024-04-20", "2024-04-21", DayType.BUSINESS_DAYS, 0L)
+    );
+  }
+
+  private static Stream<Arguments> clampArguments() {
+    return Stream.of(
+      Arguments.of(new BigDecimal("2.0"), new BigDecimal("1.0"), new BigDecimal("3.0"), new BigDecimal("2.0")),
+      Arguments.of(new BigDecimal("2.0"), new BigDecimal("3.0"), new BigDecimal("4.0"), new BigDecimal("3.0")),
+      Arguments.of(new BigDecimal("4.0"), new BigDecimal("1.0"), new BigDecimal("3.0"), new BigDecimal("3.0")),
+      Arguments.of(new BigDecimal("2.0"), new BigDecimal("2.0"), new BigDecimal("2.0"), new BigDecimal("2.0"))
     );
   }
 }

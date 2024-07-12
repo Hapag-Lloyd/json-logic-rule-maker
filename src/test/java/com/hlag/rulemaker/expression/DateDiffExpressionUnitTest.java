@@ -82,7 +82,6 @@ class DateDiffExpressionUnitTest {
     );
   }
 
-
   private static Stream<Arguments> provideIncorrectTestData() {
     return Stream.of(
       Arguments.of("", "2024-05-03", DayType.CALENDAR_DAYS, IllegalArgumentException.class, "Wrong date as argument: "),
