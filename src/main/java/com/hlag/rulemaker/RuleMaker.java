@@ -30,7 +30,7 @@ public class RuleMaker {
 
   private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-  private static final JsonLogic jsonLogic = new JsonLogic();
+  private static final RuleMakerJsonLogic RULE_MAKER_JSON_LOGIC = new RuleMakerJsonLogic();
 
   private static final Set<Class<?>> ALLOWED_LITERAL_TYPES = Set.of(
     Number.class,
@@ -519,7 +519,7 @@ public class RuleMaker {
       if (!missingVariables.isEmpty()) {
         throw new RuleMakerMissingVariablesException(missingVariables);
       }
-      return jsonLogic.apply(expression, data);
+      return RULE_MAKER_JSON_LOGIC.apply(expression, data);
     } catch (JsonLogicParseException e) {
       throw new RuleMakerParseExpressionException(e.getMessage(), e);
     } catch (JsonLogicEvaluationException e) {
