@@ -5,25 +5,25 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-public class CustomMathExpression extends NumericExpression {
+public class BigDecimalMathExpression extends NumericExpression {
 
-  public static final CustomMathExpression ADD = new CustomMathExpression("+", BigDecimal::add);
-  public static final CustomMathExpression SUBTRACT = new CustomMathExpression("-", BigDecimal::subtract, 2);
-  public static final CustomMathExpression MULTIPLY = new CustomMathExpression("*", BigDecimal::multiply);
-  public static final CustomMathExpression DIVIDE = new CustomMathExpression("/", BigDecimal::divide, 2);
-  public static final CustomMathExpression MODULO = new CustomMathExpression("%", BigDecimal::remainder, 2);
-  public static final CustomMathExpression MIN = new CustomMathExpression("min", BigDecimal::min);
-  public static final CustomMathExpression MAX = new CustomMathExpression("max", BigDecimal::max);
+  public static final BigDecimalMathExpression ADD = new BigDecimalMathExpression("+", BigDecimal::add);
+  public static final BigDecimalMathExpression SUBTRACT = new BigDecimalMathExpression("-", BigDecimal::subtract, 2);
+  public static final BigDecimalMathExpression MULTIPLY = new BigDecimalMathExpression("*", BigDecimal::multiply);
+  public static final BigDecimalMathExpression DIVIDE = new BigDecimalMathExpression("/", BigDecimal::divide, 2);
+  public static final BigDecimalMathExpression MODULO = new BigDecimalMathExpression("%", BigDecimal::remainder, 2);
+  public static final BigDecimalMathExpression MIN = new BigDecimalMathExpression("min", BigDecimal::min);
+  public static final BigDecimalMathExpression MAX = new BigDecimalMathExpression("max", BigDecimal::max);
 
   private final String key;
   private final BinaryOperator<BigDecimal> reducer;
   private final int maxArguments;
 
-  public CustomMathExpression(String key, BinaryOperator<BigDecimal> reducer) {
+  public BigDecimalMathExpression(String key, BinaryOperator<BigDecimal> reducer) {
     this(key, reducer, 0);
   }
 
-  public CustomMathExpression(String key, BinaryOperator<BigDecimal> reducer, int maxArguments) {
+  public BigDecimalMathExpression(String key, BinaryOperator<BigDecimal> reducer, int maxArguments) {
     this.key = key;
     this.reducer = reducer;
     this.maxArguments = maxArguments;

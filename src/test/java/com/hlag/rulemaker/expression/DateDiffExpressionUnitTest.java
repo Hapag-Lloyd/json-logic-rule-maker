@@ -78,7 +78,9 @@ class DateDiffExpressionUnitTest {
       Arguments.of("2024-04-19", "2024-05-03", DayType.CALENDAR_DAYS, 14L),
       Arguments.of("2024-04-19", "2024-04-19", DayType.CALENDAR_DAYS, 0L),
       Arguments.of("2024-04-19", "2024-04-19", DayType.CALENDAR_DAYS, 0L),
-      Arguments.of("2024-04-20", "2024-04-21", DayType.BUSINESS_DAYS, 0L)
+      Arguments.of("2024-04-20", "2024-04-21", DayType.BUSINESS_DAYS, 0L),
+      Arguments.of("2023-12-12", "2024-01-18", DayType.CALENDAR_DAYS, 37L),
+      Arguments.of("2023-12-12", "2024-01-18", DayType.BUSINESS_DAYS, 27L)
     );
   }
 

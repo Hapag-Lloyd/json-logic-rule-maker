@@ -1,7 +1,7 @@
 package com.hlag.rulemaker;
 
 import com.hlag.rulemaker.expression.ClampExpression;
-import com.hlag.rulemaker.expression.CustomMathExpression;
+import com.hlag.rulemaker.expression.BigDecimalMathExpression;
 import com.hlag.rulemaker.expression.CustomNumericComparisonExpression;
 import com.hlag.rulemaker.expression.DateDiffExpression;
 import io.github.jamsesso.jsonlogic.JsonLogic;
@@ -19,13 +19,13 @@ public class RuleMakerJsonLogic {
         jsonLogic.addOperation(CustomNumericComparisonExpression.GTE);
         jsonLogic.addOperation(CustomNumericComparisonExpression.LT);
         jsonLogic.addOperation(CustomNumericComparisonExpression.LTE);
-        jsonLogic.addOperation(CustomMathExpression.ADD);
-        jsonLogic.addOperation(CustomMathExpression.SUBTRACT);
-        jsonLogic.addOperation(CustomMathExpression.MULTIPLY);
-        jsonLogic.addOperation(CustomMathExpression.DIVIDE);
-        jsonLogic.addOperation(CustomMathExpression.MODULO);
-        jsonLogic.addOperation(CustomMathExpression.MIN);
-        jsonLogic.addOperation(CustomMathExpression.MAX);
+        jsonLogic.addOperation(BigDecimalMathExpression.ADD);
+        jsonLogic.addOperation(BigDecimalMathExpression.SUBTRACT);
+        jsonLogic.addOperation(BigDecimalMathExpression.MULTIPLY);
+        jsonLogic.addOperation(BigDecimalMathExpression.DIVIDE);
+        jsonLogic.addOperation(BigDecimalMathExpression.MODULO);
+        jsonLogic.addOperation(BigDecimalMathExpression.MIN);
+        jsonLogic.addOperation(BigDecimalMathExpression.MAX);
 
         jsonLogic.addOperation(ClampExpression.INSTANCE);
         jsonLogic.addOperation(DateDiffExpression.INSTANCE);

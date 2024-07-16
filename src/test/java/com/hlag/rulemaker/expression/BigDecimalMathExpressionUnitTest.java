@@ -13,7 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class CustomMathExpressionUnitTest {
+class BigDecimalMathExpressionUnitTest {
 
   @ParameterizedTest
   @MethodSource("addArguments")
@@ -21,7 +21,7 @@ class CustomMathExpressionUnitTest {
   void shouldReturnExpected_whenAddEvaluate_givenInput(List<BigDecimal> arguments, BigDecimal expected) {
     //Given
     //When
-    Object evaluated = CustomMathExpression.ADD.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.ADD.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -33,7 +33,7 @@ class CustomMathExpressionUnitTest {
   void shouldReturnExpected_whenSubtractEvaluate_givenInput(List<BigDecimal> arguments, BigDecimal expected) {
     //Given
     //When
-    Object evaluated = CustomMathExpression.SUBTRACT.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.SUBTRACT.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -45,7 +45,7 @@ class CustomMathExpressionUnitTest {
   void shouldReturnExpected_whenMultiplyEvaluate_givenInput(List<BigDecimal> arguments, BigDecimal expected) {
     //Given
     //When
-    Object evaluated = CustomMathExpression.MULTIPLY.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.MULTIPLY.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -59,7 +59,7 @@ class CustomMathExpressionUnitTest {
     BigDecimal expected = new BigDecimal("1.75");
 
     //When
-    Object evaluated = CustomMathExpression.DIVIDE.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.DIVIDE.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -73,7 +73,7 @@ class CustomMathExpressionUnitTest {
     BigDecimal expected = new BigDecimal("3.0");
 
     //When
-    Object evaluated = CustomMathExpression.MODULO.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.MODULO.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -85,7 +85,7 @@ class CustomMathExpressionUnitTest {
   void shouldReturnExpected_whenMinEvaluate_givenInput(List<BigDecimal> arguments, BigDecimal expected) {
     //Given
     //When
-    Object evaluated = CustomMathExpression.MIN.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.MIN.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -97,7 +97,7 @@ class CustomMathExpressionUnitTest {
   void shouldReturnExpected_whenMaxEvaluate_givenInput(List<BigDecimal> arguments, BigDecimal expected) {
     //Given
     //When
-    Object evaluated = CustomMathExpression.MAX.evaluate(arguments, null);
+    Object evaluated = BigDecimalMathExpression.MAX.evaluate(arguments, null);
 
     //Then
     assertThat(evaluated).isEqualTo(expected);
@@ -105,26 +105,26 @@ class CustomMathExpressionUnitTest {
 
   @ParameterizedTest
   @MethodSource("customMathExpressionsThatRequireMoreThanOneArgument")
-  void shouldThrowException_whenEvaluate_givenOneArgument(CustomMathExpression customMathExpression) {
+  void shouldThrowException_whenEvaluate_givenOneArgument(BigDecimalMathExpression bigDecimalMathExpression) {
     //Given
     List<BigDecimal> arguments = List.of(new BigDecimal("3.0"));
 
     //When
     //Then
-    assertThatThrownBy(() -> customMathExpression.evaluate(arguments, null))
+    assertThatThrownBy(() -> bigDecimalMathExpression.evaluate(arguments, null))
       .isInstanceOf(JsonLogicEvaluationException.class)
       .hasMessage("Minimum 2 arguments required");
   }
 
   @ParameterizedTest
   @MethodSource("customMathExpressionsThatRequireExactlyTwoArguments")
-  void shouldThrowException_whenEvaluate_givenMoreThanTwoArguments(CustomMathExpression customMathExpression) {
+  void shouldThrowException_whenEvaluate_givenMoreThanTwoArguments(BigDecimalMathExpression bigDecimalMathExpression) {
     //Given
     List<BigDecimal> arguments = List.of(new BigDecimal("3.0"), new BigDecimal("3.0"), new BigDecimal("3.0"));
 
     //When
     //Then
-    assertThatThrownBy(() -> customMathExpression.evaluate(arguments, null))
+    assertThatThrownBy(() -> bigDecimalMathExpression.evaluate(arguments, null))
       .isInstanceOf(JsonLogicEvaluationException.class)
       .hasMessage("Maximum 2 arguments required");
   }
@@ -167,19 +167,19 @@ class CustomMathExpressionUnitTest {
 
   private static Stream<Arguments> customMathExpressionsThatRequireMoreThanOneArgument() {
     return Stream.of(
-      Arguments.of(CustomMathExpression.MULTIPLY),
-      Arguments.of(CustomMathExpression.DIVIDE),
-      Arguments.of(CustomMathExpression.MODULO),
-      Arguments.of(CustomMathExpression.MIN),
-      Arguments.of(CustomMathExpression.MAX)
+      Arguments.of(BigDecimalMathExpression.MULTIPLY),
+      Arguments.of(BigDecimalMathExpression.DIVIDE),
+      Arguments.of(BigDecimalMathExpression.MODULO),
+      Arguments.of(BigDecimalMathExpression.MIN),
+      Arguments.of(BigDecimalMathExpression.MAX)
     );
   }
 
   private static Stream<Arguments> customMathExpressionsThatRequireExactlyTwoArguments() {
     return Stream.of(
-      Arguments.of(CustomMathExpression.SUBTRACT),
-      Arguments.of(CustomMathExpression.DIVIDE),
-      Arguments.of(CustomMathExpression.MODULO)
+      Arguments.of(BigDecimalMathExpression.SUBTRACT),
+      Arguments.of(BigDecimalMathExpression.DIVIDE),
+      Arguments.of(BigDecimalMathExpression.MODULO)
     );
   }
 }

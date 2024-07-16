@@ -329,7 +329,7 @@ public class RuleMaker {
   }
 
   /**
-   * Creates a RuleMaker representing a modulo operation of the given ruleMaker.
+   * Creates a RuleMaker representing a modulo operation.
    *
    * @param left  The left ruleWright.
    * @param right The right ruleWright.
@@ -436,7 +436,7 @@ public class RuleMaker {
   }
 
   /**
-   * Creates a RuleMaker representing a cat operation.
+   * Creates a RuleMaker representing a cat operation. Cat operation concatenate all the supplied arguments.
    *
    * @param values The values to concatenate.
    * @return A new RuleMaker representing a cat operation.
@@ -458,7 +458,8 @@ public class RuleMaker {
   }
 
   /**
-   * Creates a RuleMaker representing a log operation.
+   * Creates a RuleMaker representing a log operation. Log operation logs the value to console,
+   * then passes it through unmodified.
    *
    * @param value The string to log
    * @return A new RuleMaker representing the log operation.
