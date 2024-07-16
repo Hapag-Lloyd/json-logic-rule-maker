@@ -1,4 +1,4 @@
-package com.hlag.rulemaker;
+package com.hlag.rulemaker.expression;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

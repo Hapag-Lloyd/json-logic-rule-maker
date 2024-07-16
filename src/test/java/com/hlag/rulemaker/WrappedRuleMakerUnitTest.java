@@ -18,64 +18,64 @@ class WrappedRuleMakerUnitTest {
 
   @Test
   void shouldReturnSea_whenUnwrapAndGetLiteral_givenInput() {
-    // Given
+    //Given
     WrappedRuleMaker sut = new WrappedRuleMaker(getJsonLogicMap(JSON_LOGIC_FIRST));
     String expected = "SEA";
 
-    // When
+    //When
     String sea = sut.unwrap()[MUL].unwrap()[ADD].unwrap()[VAR_SEA].unwrap()[SEA].getLiteral().toString();
 
-    // Then
+    //Then
     assertThat(sea).isEqualTo(expected);
   }
 
   @Test
   void shouldReturnClampSecondArg_whenUnwrapAndGetLiteral_givenInput() {
-    // Given
+    //Given
     WrappedRuleMaker sut = new WrappedRuleMaker(getJsonLogicMap(JSON_LOGIC_FIRST));
     int expected = 100;
 
-    // When
+    //When
     int clampSecondArg = (Integer) sut.unwrap()[CLAMP_100].getLiteral();
 
-    // Then
+    //Then
     assertThat(clampSecondArg).isEqualTo(expected);
   }
 
   @Test
   @SuppressWarnings("unchecked")
   void shouldReturnEquipmentSizeList_whenGetLiteral_givenInput() {
-    // Given
+    //Given
     WrappedRuleMaker sut = new WrappedRuleMaker(getJsonLogicMap(JSON_LOGIC_SECOND));
     List<String> expected = List.of("EQ_20", "EQ_40");
 
-    // When
+    //When
     List<String> equipmentSizes = (List<String>) sut.unwrap()[EQ].getLiteral();
 
-    // Then
+    //Then
     assertThat(equipmentSizes).containsExactlyElementsOf(expected);
   }
 
   @Test
   void shouldThrowException_whenGetLiteral_givenNonLiteral() {
-    // Given
+    //Given
     WrappedRuleMaker sut = new WrappedRuleMaker(getJsonLogicMap(JSON_LOGIC_FIRST));
     WrappedRuleMaker givenWrappedRuleWright = sut.unwrap()[MUL];
 
-    // When
-    // Then
+    //When
+    //Then
     assertThatThrownBy(givenWrappedRuleWright::getLiteral).isInstanceOf(IllegalStateException.class)
         .hasMessage("Expression is not a literal");
   }
 
   @Test
   void shouldThrowException_whenUnwrap_givenLiteral() {
-    // Given
+    //Given
     WrappedRuleMaker sut = new WrappedRuleMaker(getJsonLogicMap(JSON_LOGIC_FIRST));
     WrappedRuleMaker givenWrappedRuleWright = sut.unwrap()[CLAMP_100];
 
-    // When
-    // Then
+    //When
+    //Then
     assertThatThrownBy(givenWrappedRuleWright::unwrap).isInstanceOf(IllegalStateException.class)
         .hasMessage("Expression is already a literal");
   }
