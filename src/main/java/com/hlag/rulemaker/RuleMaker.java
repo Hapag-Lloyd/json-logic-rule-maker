@@ -458,8 +458,7 @@ public class RuleMaker {
   }
 
   /**
-   * Creates a RuleMaker representing a log operation. Log operation logs the value to console,
-   * then passes it through unmodified.
+   * Creates a RuleMaker representing a log operation. Log operation logs the value to console, then passes it through unmodified.
    *
    * @param value The string to log
    * @return A new RuleMaker representing the log operation.

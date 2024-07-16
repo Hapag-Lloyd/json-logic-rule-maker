@@ -23,25 +23,25 @@ public class WrappedRuleMaker extends RuleMaker {
     }
 
     return isLiteral(expressionMap.values().toArray()[0]) ?
-        unwrapLiteral((Map<String, Object>) expression) :
-        unwrapCollection((Map<String, List<Object>>) expression);
+      unwrapLiteral((Map<String, Object>) expression) :
+      unwrapCollection((Map<String, List<Object>>) expression);
   }
 
   private WrappedRuleMaker[] unwrapLiteral(Map<String, Object> expressionMap) {
     return expressionMap
-        .values()
-        .stream()
-        .map(WrappedRuleMaker::new)
-        .toArray(WrappedRuleMaker[]::new);
+      .values()
+      .stream()
+      .map(WrappedRuleMaker::new)
+      .toArray(WrappedRuleMaker[]::new);
   }
 
   private WrappedRuleMaker[] unwrapCollection(Map<String, List<Object>> expressionMap) {
     return expressionMap
-        .values()
-        .stream()
-        .flatMap(Collection::stream)
-        .map(WrappedRuleMaker::new)
-        .toArray(WrappedRuleMaker[]::new);
+      .values()
+      .stream()
+      .flatMap(Collection::stream)
+      .map(WrappedRuleMaker::new)
+      .toArray(WrappedRuleMaker[]::new);
   }
 
   public Object getLiteral() {
@@ -56,7 +56,7 @@ public class WrappedRuleMaker extends RuleMaker {
     boolean notMap = !(object instanceof Map);
     boolean notNestedMap = true;
 
-    if(object instanceof Collection) {
+    if (object instanceof Collection) {
       notNestedMap = ((Collection<?>) object).stream().noneMatch(Map.class::isInstance);
     }
 
